@@ -4,30 +4,39 @@ import {
   mergeReadableStreams,
   parseFlags,
   readableStreamFromReader,
+  resolve,
 } from "./deps.ts";
 
-import { walk } from "./lib/fs/mod.ts";
-import type { ImportMap } from "./lib/import_map/mod.ts";
-import { DEFAULT_IMPORT_MAP } from "./lib/import_map/mod.ts";
+import type { Imports } from "./lib/graph/mod.ts";
+import { DEFAULT_IMPORTS, graph, walk } from "./lib/graph/mod.ts";
+
+const DEFAULT_ENTRY_POINT = "main.ts";
 
 class App {
   constructor(
     private entryPoint: string,
-    private importMap = DEFAULT_IMPORT_MAP,
+    private imports: Imports,
   ) {
-    if (basename(entryPoint) === "") {
-      this.entryPoint = join(entryPoint, "main.ts");
+    if (!basename(entryPoint)) {
+      this.entryPoint = join(entryPoint, DEFAULT_ENTRY_POINT);
+    }
+
+    if (!this.entryPoint.startsWith("http")) {
+      this.entryPoint = resolve(this.entryPoint);
     }
   }
 
-  public action() {
-    for (const [file, cmd] of walk(this.entryPoint, this.importMap)) {
+  public async action() {
+    const g = await graph({
+      entryPoint: this.entryPoint,
+      imports: this.imports,
+    });
+    for (const [file, { cmd, line, column }] of walk(g)) {
       try {
         spawn(cmd);
       } catch (err) {
         console.error(
-          `Error running command ${cmd.join(" ")} from ${file}.`,
-          err,
+          `Error running command at ${file}:${line}:${column}: ${err.message}`,
         );
       }
     }
@@ -35,10 +44,11 @@ class App {
 }
 
 if (import.meta.main) {
-  main();
+  await main();
+  Deno.exit(0);
 }
 
-function main() {
+async function main() {
   const flags = parseFlags(Deno.args, {
     boolean: ["help"],
     string: ["import-map"],
@@ -56,14 +66,15 @@ function main() {
   }
 
   const importMapPath = flags["import-map"];
-  const app = importMapPath
-    ? new App(
-      entryPoint,
-      JSON.parse(Deno.readTextFileSync(importMapPath)) as ImportMap,
-    )
-    : new App(entryPoint);
+  let imports = DEFAULT_IMPORTS;
+  if (importMapPath) {
+    imports = JSON.parse(
+      Deno.readTextFileSync(importMapPath),
+    )["imports"] as Imports;
+  }
 
-  app.action();
+  const app = new App(entryPoint, imports);
+  await app.action();
 }
 
 function spawn(

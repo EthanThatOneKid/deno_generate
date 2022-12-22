@@ -25,3 +25,12 @@ export {
   resolve,
   toFileUrl,
 } from "https://deno.land/std@0.168.0/path/mod.ts";
+
+export type {
+  ModuleGraph,
+  ResolveResult,
+} from "https://deno.land/x/deno_graph@0.40.0/mod.ts";
+export {
+  createGraph,
+  MediaType,
+} from "https://deno.land/x/deno_graph@0.40.0/mod.ts";
