@@ -36,6 +36,18 @@ deno install -rf -A https://deno.land/x/generate/main.ts --name=deno-generate
 deno-generate <entrypoint file>
 ```
 
+<details>
+<summary>
+Install from source
+(Expand for more information)
+</summary>
+
+```sh
+deno install -rf -A main.ts --name=deno-generate
+```
+
+</details>
+
 ### Security
 
 The `deno-generate` command will only run `//deno:generate` comments that are

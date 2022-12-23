@@ -1,5 +1,5 @@
 import type { ModuleGraph } from "../../deps.ts";
-import { createGraph, join } from "../../deps.ts";
+import { createGraph, join, toFileUrl, urlJoin } from "../../deps.ts";
 
 // TODO: Support fallback imports (e.g. `Record<string, string[]>`).
 export type Imports = Record<string, string>;
@@ -25,15 +25,20 @@ function makeResolver(
   cwd = Deno.cwd(),
 ): (specifier: string, referrer: string) => string {
   return (specifier, referrer) => {
+    if (referrer.startsWith("http")) {
+      return urlJoin(referrer, "..", specifier);
+    }
+
     const known = findMapping(specifier, imports);
     if (known) {
       const [prefix, url] = known;
-      specifier = specifier.replace(prefix, url);
+      return specifier.replace(prefix, url);
     }
+
     if (!specifier.startsWith("http")) {
-      specifier = join(cwd, specifier);
+      return toFileUrl(join(cwd, specifier)).toString();
     }
-    console.log({ specifier, referrer, known });
+
     return specifier;
   };
 }

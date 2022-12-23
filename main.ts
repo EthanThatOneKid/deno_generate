@@ -1,62 +1,99 @@
 import {
-  basename,
-  join,
+  isWindows,
   mergeReadableStreams,
   parseFlags,
   readableStreamFromReader,
   resolve,
+  toFileUrl,
 } from "./deps.ts";
 
-import type { Imports } from "./lib/graph/mod.ts";
+import type { Imports, Options } from "./lib/graph/mod.ts";
 import { DEFAULT_IMPORTS, graph, walk } from "./lib/graph/mod.ts";
 
-const DEFAULT_ENTRY_POINT = "main.ts";
+// const DEFAULT_ENTRY_POINT = "main.ts";
+
+interface AppConfig {
+  /**
+   * The entry point for the application.
+   */
+  graph: Required<Options>;
+
+  /**
+   * The maximum timeout for each command.
+   */
+  timeout: number; // in milliseconds
+}
 
 class App {
   constructor(
-    private entryPoint: string,
-    private imports: Imports,
+    private config: AppConfig,
   ) {
-    if (!basename(entryPoint)) {
-      this.entryPoint = join(entryPoint, DEFAULT_ENTRY_POINT);
-    }
-
-    if (!this.entryPoint.startsWith("http")) {
-      this.entryPoint = resolve(this.entryPoint);
+    if (!this.config.graph.entryPoint.startsWith("http")) {
+      this.config.graph.entryPoint = toFileUrl(
+        resolve(this.config.graph.cwd, this.config.graph.entryPoint),
+      ).toString();
     }
   }
 
   public async action() {
-    const g = await graph({
-      entryPoint: this.entryPoint,
-      imports: this.imports,
-    });
+    const g = await graph(this.config.graph);
+
     for (const [file, { cmd, line, column }] of walk(g)) {
-      try {
-        spawn(cmd);
-      } catch (err) {
-        console.error(
-          `Error running command at ${file}:${line}:${column}: ${err.message}`,
-        );
+      //deno:generate cat \
+      // LICENSE
+      // THe following if-statement is a Windows workaround. Motivation:
+      // https://github.com/denoland/deno/issues/5921
+      if (isWindows) {
+        cmd.unshift("cmd", "/c");
       }
+
+      console.log(`Running: ${file}:${line}:${column} $ ${cmd.join(" ")}`);
+      const process = Deno.run({
+        cmd,
+        stdout: "piped",
+        stderr: "piped",
+        cwd: this.config.graph.cwd,
+      });
+      const stdout = readableStreamFromReader(process.stdout);
+      const stderr = readableStreamFromReader(process.stderr);
+      const joined = mergeReadableStreams(stdout, stderr);
+      const timeoutID = setTimeout(
+        () => process.kill("SIGINT"),
+        this.config.timeout,
+      );
+      await joined.pipeTo(Deno.stdout.writable, {
+        preventAbort: true,
+        preventCancel: true,
+        preventClose: true,
+      });
+      clearTimeout(timeoutID);
+      const output = await process.output();
+      console.log({ output });
     }
   }
 }
 
-if (import.meta.main) {
-  await main();
-  Deno.exit(0);
-}
-
-async function main() {
+export async function generate() {
   const flags = parseFlags(Deno.args, {
     boolean: ["help"],
-    string: ["import-map"],
-    alias: { help: "h" },
+    string: ["import-map", "cwd"],
+    alias: {
+      help: "h",
+      "import-map": "i",
+      cwd: "c",
+    },
   });
 
   if (flags.help) {
-    console.log(`Usage: deno run -A main.ts [entry point]`);
+    console.log(
+      `Usage: ${Deno.mainModule} [options] [entry_point]
+
+Options:
+  -h, --help            Show this help message and exit.
+  -i, --import-map      Path to import map.
+  -c, --cwd             Overwrite working directory.
+`,
+    );
     Deno.exit(0);
   }
 
@@ -73,22 +110,22 @@ async function main() {
     )["imports"] as Imports;
   }
 
-  const app = new App(entryPoint, imports);
+  const cwd = flags["cwd"] || Deno.cwd();
+  const app = new App({
+    graph: { entryPoint, imports, cwd },
+    timeout: 1e3 * 60, // 1 minute.
+  });
   await app.action();
 }
 
-function spawn(
-  cmd: [string | URL, ...string[]],
-  timeout = 1e3 * 60, /* 1 minute */
-) {
-  const process = Deno.run({ cmd, stdout: "piped", stderr: "piped" });
-  const stdout = readableStreamFromReader(process.stdout);
-  const stderr = readableStreamFromReader(process.stderr);
-  const joined = mergeReadableStreams(stdout, stderr);
-  const timeoutID = setTimeout(
-    () => process.kill("SIGINT"),
-    timeout,
-  );
+// function spawn(
+//   cmd: [string | URL, ...string[]],
+//   timeout = 1e3 * 60, /* 1 minute */
+// ) {
+//   console.log("Running:", cmd.join(" "));
+// }
 
-  joined.pipeTo(Deno.stdout.writable).then(() => clearTimeout(timeoutID));
+if (import.meta.main) {
+  await generate();
+  Deno.exit(0);
 }
