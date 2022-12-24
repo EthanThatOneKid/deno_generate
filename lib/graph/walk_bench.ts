@@ -3,13 +3,11 @@ import { graph } from "./graph.ts";
 
 const BIG_GRAPH = await graph({
   entryPoint: import.meta.resolve("../../../main.ts"),
-  cwd: import.meta.resolve("../../../"),
-  // TODO: Read from import_map.json in root of repo.
+  // TODO: Read from import_map.json from root once it's available.
 });
 
 const SMALL_GRAPH = await graph({
   entryPoint: import.meta.resolve("./testdata/main.ts"),
-  cwd: import.meta.resolve("./testdata"),
 });
 
 Deno.bench("walk big graph", () => {

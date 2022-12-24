@@ -36,4 +36,6 @@ export {
   MediaType,
 } from "https://deno.land/x/deno_graph@0.40.0/mod.ts";
 
-export { isWindows } from "https://deno.land/std@0.170.0/_util/os.ts";
+export { isWindows, osType } from "https://deno.land/std@0.170.0/_util/os.ts";
+
+export { exec } from "https://deno.land/std@0.168.0/node/child_process.ts";

@@ -1,14 +1,46 @@
 import type { ModuleGraph } from "../../deps.ts";
 
-import type { ParsedCommand } from "../parse/mod.ts";
-import { parseCommands } from "../parse/parse_cmds.ts";
+import type { CharacterLocation } from "../parse/mod.ts";
+import { parseComments } from "../parse/mod.ts";
 
-export type Walk = Generator<[string, ParsedCommand], void, unknown>;
+export interface GenerateCommand extends CharacterLocation {
+  cmd: string[];
+}
+
+export type Walk = Generator<[string, GenerateCommand], void, unknown>;
 
 export function* walk({ modules }: ModuleGraph): Walk {
   for (const mod of modules) {
-    for (const cmd of parseCommands(mod.source)) {
-      yield [mod.specifier, cmd];
+    const aliased = new Map<string, GenerateCommand>();
+    for (const comment of parseComments(mod.source)) {
+      if (comment.alias) {
+        aliased.set(comment.alias, {
+          cmd: comment.args,
+          line: comment.line,
+          character: comment.character,
+        });
+        continue;
+      }
+
+      if (comment.args.length === 0) {
+        continue;
+      }
+
+      const alias = aliased.get(comment.args[0]);
+      if (alias) {
+        yield [mod.specifier, {
+          cmd: comment.args.slice(1),
+          line: comment.line,
+          character: comment.character,
+        }];
+        continue;
+      }
+
+      yield [mod.specifier, {
+        cmd: comment.args,
+        line: comment.line,
+        character: comment.character,
+      }];
     }
   }
 }

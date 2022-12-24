@@ -16,8 +16,18 @@ For example:
 
 ### Run
 
-Now to generate your code you may either run the command directly from
-`deno.land` or `github.com`:
+Now you may generate your code using the `deno-generate` tool. Optionally, you
+may provide an import map to resolve imports.
+
+TODO(@EthanThatOneKid): Update this to use the `deno generate` subcommand once
+it is in Deno. See proposal: _Coming soon_.
+
+```sh
+deno-generate <entrypoint file> --import-map=import_map.json
+```
+
+If you do not have `deno-generate` [installed](#install), run the tool directly
+from `deno.land` or `github.com`:
 
 ```sh
 deno run -Ar https://deno.land/x/generate/main.ts <entrypoint file> --import-map=import_map.json
@@ -43,6 +53,8 @@ Install from source
 </summary>
 
 ```sh
+git clone https://github.com/ethanthatonekid/deno-generate.git
+cd deno-generate
 deno install -rf -A main.ts --name=deno-generate
 ```
 
@@ -50,9 +62,10 @@ deno install -rf -A main.ts --name=deno-generate
 
 ### Security
 
-The `deno-generate` command will only run `//deno:generate` comments that are
+The `deno-generate` tool will only run `//deno:generate` comments that are
 running a command allowed by the `--allow-run` flag. This is to prevent
-malicious code from being run.
+malicious code from being run. You may set this flag on installation or each
+time your run the script.
 
 For example, run the following command to only run `deno run` commands:
 
@@ -67,14 +80,49 @@ More information on the `--allow-run` flag can be found
 
 See the examples in the [`examples` directory](examples).
 
-## Develop
+## Development
 
-### Format and lint
+### Testing
 
-```sh
+Pass all existing unit tests.
+
+```bash
+deno test -A
+```
+
+Cover code completely.
+
+```bash
+deno test -A --coverage="cov" && deno coverage cov/
+```
+
+### Formatting
+
+Properly format.
+
+```bash
 deno fmt
+```
+
+### Linting
+
+Check for lint errors.
+
+```bash
 deno lint
 ```
+
+### Run
+
+A simple example:
+
+```sh
+deno run -Ar main.ts main.ts
+```
+
+## Inspiration
+
+- <https://go.googlesource.com/proposal/+/refs/heads/master/design/go-generate.md>
 
 ## License
 
