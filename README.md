@@ -1,7 +1,7 @@
-# `deno.land/x/generate`
+# Deno generate
 
-//deno:generate comment useful for generating code within the Deno tool
-ecosystem.
+//deno:generate comment annotation useful for generating code within the Deno
+tool ecosystem.
 
 ## Usage
 
@@ -35,6 +35,17 @@ deno run -Ar https://deno.land/x/generate/main.ts <entrypoint file> --import-map
 
 ```sh
 deno run -Ar https://github.com/ethanthatonekid/deno-generate/raw/main/main.ts <entrypoint file> --import-map=import_map.json
+```
+
+Feel free to define a task in your `deno.jsonc` file to run the `deno-generate`
+tool in your project.
+
+```jsonc
+{
+  "scripts": {
+    "generate": "deno run -Ar https://deno.land/x/generate/main.ts"
+  }
+}
 ```
 
 ### Install
@@ -78,7 +89,7 @@ More information on the `--allow-run` flag can be found
 
 ## Examples
 
-See the examples in the [`examples` directory](examples).
+See more examples in the [`examples` directory](examples).
 
 ## Development
 
@@ -87,38 +98,33 @@ See the examples in the [`examples` directory](examples).
 Pass all existing unit tests.
 
 ```bash
-deno test -A
+deno task test
 ```
 
 Cover code completely.
 
 ```bash
-deno test -A --coverage="cov" && deno coverage cov/
+deno task cov
 ```
 
-### Formatting
+### Formatting and Linting
 
-Properly format.
+Properly format and check for lint errors.
+
+This process cleans your code and seek out common errors.
 
 ```bash
-deno fmt
+deno task flint
 ```
 
-### Linting
+Task `flint` is defined in [`deno.jsonc`](deno.jsonc) and consolidates both
+`deno fmt` and `deno lint`.
 
-Check for lint errors.
+### Contributing
 
-```bash
-deno lint
-```
-
-### Run
-
-A simple example:
-
-```sh
-deno run -Ar main.ts main.ts
-```
+There are several aspects of this project that have room for improvement. If you
+would like to contribute, please read the
+[contributing guidelines](CONTRIBUTING.md).
 
 ## Inspiration
 

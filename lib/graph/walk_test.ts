@@ -38,6 +38,10 @@ Deno.test("walks a relative path to a relative file URL (2)", () => {
       { cmd: TEST_CMD_1, line: 3, character: 1 },
     ],
     [
+      TEST_SPECIFIER_1,
+      { cmd: ["deno", "run", "./hello_world.ts"], line: 7, character: 1 },
+    ],
+    [
       TEST_SPECIFIER_2,
       { cmd: TEST_CMD_2, line: 1, character: 1 },
     ],

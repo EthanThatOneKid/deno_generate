@@ -1,5 +1,10 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    // TODO: Skip cov/ directory.
+    "flint": "deno fmt && deno lint",
+    "test": "deno test -A",
+    "bench": "deno bench -A",
+    "cov": "deno test -A --coverage=\"cov\" && deno coverage cov/",
+    "e2e": "deno run main.ts"
   }
 }

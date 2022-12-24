@@ -5,6 +5,7 @@ import { parseComments } from "../parse/mod.ts";
 
 export interface GenerateCommand extends CharacterLocation {
   cmd: string[];
+  original: string;
 }
 
 export type Walk = Generator<[string, GenerateCommand], void, unknown>;
@@ -18,6 +19,7 @@ export function* walk({ modules }: ModuleGraph): Walk {
           cmd: comment.args,
           line: comment.line,
           character: comment.character,
+          original: comment.original,
         });
         continue;
       }
@@ -29,9 +31,10 @@ export function* walk({ modules }: ModuleGraph): Walk {
       const alias = aliased.get(comment.args[0]);
       if (alias) {
         yield [mod.specifier, {
-          cmd: comment.args.slice(1),
+          cmd: [...alias.cmd, ...comment.args.slice(1)],
           line: comment.line,
           character: comment.character,
+          original: comment.original,
         }];
         continue;
       }
@@ -40,6 +43,7 @@ export function* walk({ modules }: ModuleGraph): Walk {
         cmd: comment.args,
         line: comment.line,
         character: comment.character,
+        original: comment.original,
       }];
     }
   }
