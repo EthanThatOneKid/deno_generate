@@ -1,5 +1,8 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    "flint": "deno lint && deno fmt",
+    "test": "deno test -A",
+    "bench": "deno bench -A",
+    "cov": "deno test -A --coverage=\"cov\" && deno coverage cov/"
   }
 }

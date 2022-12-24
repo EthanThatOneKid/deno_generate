@@ -5,13 +5,26 @@ import { DEFAULT_IMPORTS, graph, walk } from "./lib/graph/mod.ts";
 
 // const DEFAULT_ENTRY_POINT = "main.ts";
 
+const HELP_VERSION_1 =
+  `Usage: deno generate [-run regexp] [-n] [-v] [-x] [build flags] [file.go... | packages]`;
+
+// TODO:
+// https://clig.dev/#help
+const HELP =
+  `Usage: deno generate [-run regexp] [-n] [-v] [-x] [build flags] [file.ts...]`;
+
 export async function generate() {
+  // TODO: Add more flags as described in the Go source code.
+  // https://github.com/golang/go/blob/38cfb3be9d486833456276777155980d1ec0823e/src/cmd/go/internal/generate/generate.go#L32
   const flags = parseFlags(Deno.args, {
-    boolean: ["help"],
-    string: ["import-map"],
+    boolean: ["help", "dry-run", "verbose", "trace"],
+    string: ["import-map", "run", "skip"],
     alias: {
       help: "h",
       "import-map": "imports",
+      "dry-run": "n",
+      verbose: "v",
+      trace: "x",
     },
   });
 
@@ -27,8 +40,9 @@ Options:
     Deno.exit(0);
   }
 
-  const entryPoint: string = toFileUrl(resolve(flags._[0] as string))
-    .toString();
+  const entryPoint: string = toFileUrl(
+    resolve(flags._[0] as string || "./main.ts"),
+  ).toString();
   if (!entryPoint) {
     throw new Error("Please provide an entry point.");
   }
