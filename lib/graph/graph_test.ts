@@ -42,7 +42,7 @@ Deno.test("graph creates a graph with 2 modules", async () => {
           },
         ],
         kind: "esm",
-        size: 96,
+        size: 174,
         mediaType: MediaType.TypeScript,
         specifier: TEST_SPECIFIER_1,
       },

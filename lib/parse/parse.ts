@@ -8,12 +8,12 @@ import { getMatches } from "./re.ts";
  */
 export interface ParsedComment extends CharacterLocation {
   args: string[];
+  original: string;
   alias?: string;
 }
 
 const MULTILINE_COMMAND_PATTERN =
   /\/\/deno:generate(.*?)(\\\s*(\r\n|[\r\n])(.*?)*\/\/(.*?))*(\r\n|[\r\n]|$)/gm;
-// /\/\/deno:generate(.*?)(\\\s*(\r\n|[\r\n])\s*\/\/(.*?))*(\r\n|[\r\n]|$)/gm;
 
 /**
  * This is a very simple parser that only looks for comments
@@ -54,11 +54,11 @@ function fromComment(
 ): ParsedComment {
   // Remove the leading // and trailing whitespace after line breaks
   // following a backslash.
-  const joined = comment.replaceAll(/\\\s*(\r\n|[\r\n])\s*\/\//gm, "");
+  const original = comment.replaceAll(/\s*\\\s*(\r\n|[\r\n])\s*\/\//gm, "")
+    .trim();
 
   // Split on spaces, but not spaces inside quotes.
-  console.log({ joined });
-  const split = quotedSplit(joined);
+  const split = quotedSplit(original);
 
   // Remove the first arg, which is the annotation, //deno:generate.
   const [_, ...args] = split;
@@ -66,8 +66,8 @@ function fromComment(
   // If the first arg is an alias, then we need to remove it from the
   // command and return it separately.
   if (args[0] === "-command") {
-    return { args: args.slice(2), alias: args[1], line, character };
+    return { args: args.slice(2), alias: args[1], line, character, original };
   }
 
-  return { args, line, character };
+  return { args, line, character, original };
 }

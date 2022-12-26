@@ -120,13 +120,11 @@ deno task flint
 Task `flint` is defined in [`deno.jsonc`](deno.jsonc) and consolidates both
 `deno fmt` and `deno lint`.
 
-### Run
+### Contributing
 
-A simple example:
-
-```sh
-deno run -Ar main.ts ./main.ts
-```
+There are several aspects of this project that have room for improvement. If you
+would like to contribute, please read the
+[contributing guidelines](CONTRIBUTING.md).
 
 ## Inspiration
 
