@@ -53,15 +53,14 @@ function fromComment(
   character: number,
 ): ParsedComment {
   // Remove the leading // and trailing whitespace after line breaks
-  // following a backslash.
-  const original = comment.replaceAll(/\s*\\\s*(\r\n|[\r\n])\s*\/\//gm, "")
+  // following a backslash. Also, remove the leading annotation, //deno:generate.
+  const original = comment
+    .replace(/^\/\/deno:generate\s+/, "")
+    .replaceAll(/\s*\\\s*(\r\n|[\r\n])\s*\/\//gm, "")
     .trim();
 
   // Split on spaces, but not spaces inside quotes.
-  const split = quotedSplit(original);
-
-  // Remove the first arg, which is the annotation, //deno:generate.
-  const [_, ...args] = split;
+  const args = quotedSplit(original);
 
   // If the first arg is an alias, then we need to remove it from the
   // command and return it separately.

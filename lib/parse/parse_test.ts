@@ -11,7 +11,7 @@ Deno.test("parses a file with a single import and a command", () => {
       args: ["echo", "Hello World!"],
       line: 1,
       character: 33,
-      original: `//deno:generate echo "Hello World!"`,
+      original: `echo "Hello World!"`,
     },
   ]);
 });
@@ -27,7 +27,7 @@ console.log("Hello World!");`,
       args: ["echo", "Hello World!"],
       line: 1,
       character: 1,
-      original: `//deno:generate echo "Hello World!"`,
+      original: `echo "Hello World!"`,
     },
   ]);
 });
@@ -43,13 +43,13 @@ console.log("Hello World!"); //deno:generate echo "Hello World!"`,
       args: ["echo", "Hello World!"],
       line: 1,
       character: 1,
-      original: `//deno:generate echo "Hello World!"`,
+      original: `echo "Hello World!"`,
     },
     {
       args: ["echo", "Hello World!"],
       line: 3,
       character: 30,
-      original: `//deno:generate echo "Hello World!"`,
+      original: `echo "Hello World!"`,
     },
   ]);
 });

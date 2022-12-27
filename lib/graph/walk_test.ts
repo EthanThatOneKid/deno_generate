@@ -1,7 +1,5 @@
 import { assertEquals } from "../../test_deps.ts";
 
-// import type { GenerateCommand } from "../parse/mod.ts";
-
 import { graph } from "./graph.ts";
 import { walk } from "./walk.ts";
 
@@ -24,7 +22,12 @@ Deno.test("walks a relative path to a relative file URL", () => {
   const expected = [
     [
       TEST_SPECIFIER_2,
-      { cmd: TEST_CMD_2, line: 1, character: 1 },
+      {
+        cmd: TEST_CMD_2,
+        line: 1,
+        character: 1,
+        original: 'echo "Hello World 2"',
+      },
     ],
   ];
   assertEquals(actual, expected);
@@ -35,15 +38,31 @@ Deno.test("walks a relative path to a relative file URL (2)", () => {
   const expected = [
     [
       TEST_SPECIFIER_1,
-      { cmd: TEST_CMD_1, line: 3, character: 1 },
+      {
+        cmd: TEST_CMD_1,
+        line: 3,
+        character: 1,
+        original: 'echo "Hello World 1"',
+      },
     ],
     [
       TEST_SPECIFIER_1,
-      { cmd: ["deno", "run", "./hello_world.ts"], line: 7, character: 1 },
+      {
+        cmd: ["deno", "run", "./hello_world.ts"],
+        line: 7,
+        character: 1,
+        // Alias 'deno' to 'deno run' in the command.
+        original: "deno ./hello_world.ts",
+      },
     ],
     [
       TEST_SPECIFIER_2,
-      { cmd: TEST_CMD_2, line: 1, character: 1 },
+      {
+        cmd: TEST_CMD_2,
+        line: 1,
+        character: 1,
+        original: 'echo "Hello World 2"',
+      },
     ],
   ];
   assertEquals(actual, expected);
@@ -54,11 +73,21 @@ Deno.test("walks a relative path via import map", () => {
   const expected = [
     [
       TEST_SPECIFIER_3,
-      { cmd: TEST_CMD_1, line: 3, character: 1 },
+      {
+        cmd: TEST_CMD_1,
+        line: 3,
+        character: 1,
+        original: 'echo "Hello World 1"',
+      },
     ],
     [
       TEST_SPECIFIER_2,
-      { cmd: TEST_CMD_2, line: 1, character: 1 },
+      {
+        cmd: TEST_CMD_2,
+        line: 1,
+        character: 1,
+        original: 'echo "Hello World 2"',
+      },
     ],
   ];
   assertEquals(actual, expected);

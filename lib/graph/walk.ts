@@ -14,6 +14,7 @@ export function* walk({ modules }: ModuleGraph): Walk {
   for (const mod of modules) {
     const aliased = new Map<string, GenerateCommand>();
     for (const comment of parseComments(mod.source)) {
+      console.log({ comment });
       if (comment.alias) {
         aliased.set(comment.alias, {
           cmd: comment.args,
