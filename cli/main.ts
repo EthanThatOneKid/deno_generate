@@ -11,6 +11,7 @@ if (import.meta.main) {
  */
 async function main() {
   const flags = parseGenerateFlags(Deno.args);
+  // TODO: Print help text from <https://github.com/denoland/deno/issues/19176>.
   const options = toGenerateOptions(flags);
 
   await setup({

@@ -21,18 +21,18 @@ with the command you want to run. For example:
 To generate your code using the CLI tool, you can run the following command:
 
 ```sh
-deno-generate <entrypoint file> --import-map=import_map.json
+deno-generate <entrypoint file>
 ```
 
 If you are not interested in installing the script, you can still run it
 directly from `deno.land` or `github.com`:
 
 ```sh
-deno run -Ar https://deno.land/x/generate/main.ts <entrypoint file> --import-map=import_map.json
+deno run -Ar https://deno.land/x/generate/main.ts <entrypoint file>
 ```
 
 ```sh
-deno run -Ar https://github.com/ethanthatonekid/deno_generate/raw/main/main.ts <entrypoint file> --import-map=import_map.json
+deno run -Ar https://github.com/ethanthatonekid/deno_generate/raw/main/main.ts <entrypoint file>
 ```
 
 You can also define a task in your `deno.jsonc` file to run the CLI tool in your
@@ -41,7 +41,7 @@ project:
 ```jsonc
 {
   "scripts": {
-    "generate": "deno run -Ar https://deno.land/x/generate/main.ts"
+    "generate": "deno run -Ar https://deno.land/x/generate/main.ts <entrypoint file>"
   }
 }
 ```
@@ -83,7 +83,7 @@ deno run -Ar https://deno.land/x/generate/main.ts <entrypoint file> --allow-run=
 ```
 
 You can find more information about the `--allow-run` flag in the
-[Deno permissions documentation](https://deno.land/manual@v1.28.3/basics/permissions#permissions-list).
+[Deno permissions documentation](https://deno.land/manual/basics/permissions#permissions-list).
 
 ## Examples
 
