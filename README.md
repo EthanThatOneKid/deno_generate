@@ -16,7 +16,7 @@ with the command you want to run. For example:
 //deno:generate deno run https://deno.land/std/examples/cat.ts README.md
 ```
 
-### Running the Tool
+### Running the CLI tool
 
 To generate your code using the CLI tool, you can run the following command:
 
@@ -105,7 +105,7 @@ To run the existing unit tests, use the following command:
 deno test
 ```
 
-### Formatting and Linting
+### Formatting and linting
 
 To format your code and check for lint errors, use the following command:
 
