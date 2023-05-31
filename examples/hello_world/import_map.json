@@ -1,7 +1,0 @@
-{
-  "imports": {
-    "lib/": "path/to/lib/",
-    "generated/": "path/to/generated/",
-    "third_party/": "https://karni.codes/deno-hello-world/raw/8204934972b07715c8e08e71fe70201a159b1c31/"
-  }
-}

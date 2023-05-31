@@ -1,8 +1,3 @@
-// isSpaceByte returns true if the given character is a space character.
-function isSpaceByte(c: string): boolean {
-  return c === " " || c === "\t" || c === "\n" || c === "\r";
-}
-
 /**
  * quotedSplit is a simple shell-like string splitter that splits on spaces
  * unless the space is quoted.
@@ -29,7 +24,7 @@ export function quotedSplit(s: string): string[] {
         i++;
       }
       if (i >= s.length) {
-        throw new Error(`unterminated ${quote} string`);
+        throw new Error(`Unterminated ${quote} string.`);
       }
       f.push(s.slice(0, i));
       s = s.slice(i + 1);
@@ -43,4 +38,9 @@ export function quotedSplit(s: string): string[] {
     s = s.slice(i);
   }
   return f;
+}
+
+// isSpaceByte returns true if the given character is a space character.
+function isSpaceByte(c: string): boolean {
+  return c === " " || c === "\t" || c === "\n" || c === "\r";
 }

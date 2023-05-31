@@ -1,44 +1,42 @@
-# Deno generate
+# `deno generate` Proof-of-Concept ![thunder_deno](https://cdn.discordapp.com/emojis/811013541846319105.gif?size=24&quality=lossless)
 
-//deno:generate comment annotation useful for generating code within the Deno
-tool ecosystem.
+[![deno doc](https://doc.deno.land/badge.svg)](https://deno.land/x/generate)
+
+Automate code generation by running procedures defined in comment annotations.
+
+This repository is a proof-of-concept for the `deno generate` subcommand as
+proposed in <https://github.com/denoland/deno/issues/19176>.
 
 ## Usage
 
-In your program add a `//deno:generate` comment with the command you want to
-run.
-
-For example:
+To use this tool, you need to add a `//deno:generate` comment in your program
+with the command you want to run. For example:
 
 ```ts
 //deno:generate deno run https://deno.land/std/examples/cat.ts README.md
 ```
 
-### Run
+### Running the Tool
 
-Now you may generate your code using the `deno-generate` tool. Optionally, you
-may provide an import map to resolve imports.
-
-TODO(@EthanThatOneKid): Update this to use the `deno generate` subcommand once
-it is in Deno. See proposal: _Coming soon_.
+To generate your code using the CLI tool, you can run the following command:
 
 ```sh
 deno-generate <entrypoint file> --import-map=import_map.json
 ```
 
-If you do not have `deno-generate` [installed](#install), run the tool directly
-from `deno.land` or `github.com`:
+If you are not interested in installing the script, you can still run it
+directly from `deno.land` or `github.com`:
 
 ```sh
 deno run -Ar https://deno.land/x/generate/main.ts <entrypoint file> --import-map=import_map.json
 ```
 
 ```sh
-deno run -Ar https://github.com/ethanthatonekid/deno-generate/raw/main/main.ts <entrypoint file> --import-map=import_map.json
+deno run -Ar https://github.com/ethanthatonekid/deno_generate/raw/main/main.ts <entrypoint file> --import-map=import_map.json
 ```
 
-Feel free to define a task in your `deno.jsonc` file to run the `deno-generate`
-tool in your project.
+You can also define a task in your `deno.jsonc` file to run the CLI tool in your
+project:
 
 ```jsonc
 {
@@ -48,9 +46,9 @@ tool in your project.
 }
 ```
 
-### Install
+### Installation
 
-Or you may install the `deno-generate` command and run it:
+Alternatively, you can install the script as a command and run it locally:
 
 ```sh
 deno install -rf -A https://deno.land/x/generate/main.ts --name=deno-generate
@@ -59,13 +57,13 @@ deno-generate <entrypoint file>
 
 <details>
 <summary>
-Install from source
+Install from script source
 (Expand for more information)
 </summary>
 
 ```sh
-git clone https://github.com/ethanthatonekid/deno-generate.git
-cd deno-generate
+git clone https://github.com/ethanthatonekid/deno_generate.git
+cd deno_generate
 deno install -rf -A main.ts --name=deno-generate
 ```
 
@@ -73,72 +71,71 @@ deno install -rf -A main.ts --name=deno-generate
 
 ### Security
 
-The `deno-generate` tool will only run `//deno:generate` comments that are
-running a command allowed by the `--allow-run` flag. This is to prevent
-malicious code from being run. You may set this flag on installation or each
-time your run the script.
+The CLI tool only executes `//deno:generate` comments that run commands allowed
+by the `--allow-run` flag. This security measure is in place to prevent the
+execution of malicious code. You can set this flag during installation or each
+time you run the script.
 
-For example, run the following command to only run `deno run` commands:
+For example, to only allow `deno run` commands, use the following command:
 
 ```sh
 deno run -Ar https://deno.land/x/generate/main.ts <entrypoint file> --allow-run=deno
 ```
 
-More information on the `--allow-run` flag can be found
-<https://deno.land/manual@v1.28.3/basics/permissions#permissions-list>.
+You can find more information about the `--allow-run` flag in the
+[Deno permissions documentation](https://deno.land/manual@v1.28.3/basics/permissions#permissions-list).
 
 ## Examples
 
-See more examples in the [`examples` directory](examples).
+You can find more examples in the [`examples` directory](examples).
 
 ## Development
 
-### Testing
+To run the tool from source, use the following command:
 
-Pass all existing unit tests.
-
-```bash
-deno task test
+```sh
+deno run -A cli/main.ts --verbose ./examples/with_generate_docs.ts
 ```
 
-Cover code completely.
+### Testing
+
+To run the existing unit tests, use the following command:
 
 ```bash
-deno task cov
+deno test
 ```
 
 ### Formatting and Linting
 
-Properly format and check for lint errors.
+To format your code and check for lint errors, use the following command:
 
-This process cleans your code and seek out common errors.
+This process cleans your code and identifies common errors.
 
 ```bash
-deno task flint
+deno task all
 ```
 
-Task `flint` is defined in [`deno.jsonc`](deno.jsonc) and consolidates both
-`deno fmt` and `deno lint`.
+The `all` task is defined in [`deno.jsonc`](deno.jsonc) and combines all of the
+development tasks into one command.
 
 ### Contributing
 
-There are several aspects of this project that have room for improvement. If you
-would like to contribute, please read the
+If you would like to contribute to this project, please read the
 [contributing guidelines](CONTRIBUTING.md).
 
 ## Inspiration
 
-- <https://go.googlesource.com/proposal/+/refs/heads/master/design/go-generate.md>
+- [Go Generate Proposal](https://go.googlesource.com/proposal/+/refs/heads/master/design/go-generate.md)
 
 ## License
 
-[MIT](LICENSE)
+This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgements
 
-- Thank you to the [Deno](https://deno.land) team for creating such a great
-  tool.
+Special thanks to the [Deno](https://deno.land) team for creating this excellent
+tool.
 
 ---
 
-Created with <3 by [**@EthanThatOneKid**](https://etok.codes/).
+Programmed with 🦕 by [**@EthanThatOneKid**](https://etok.codes/)

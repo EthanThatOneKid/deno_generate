@@ -1,10 +1,10 @@
 {
+  "lock": "./deno.lock",
   "tasks": {
-    // TODO: Skip cov/ directory.
-    "flint": "deno fmt && deno lint",
-    "test": "deno test -Ar",
-    "bench": "deno bench -Ar",
-    "cov": "deno test -Ar --coverage=\"cov\" && deno coverage cov/",
-    "e2e": "deno run -Ar main.ts"
+    "lint": "deno lint",
+    "fmt": "deno fmt",
+    "udd": "deno run -r -A https://deno.land/x/udd/main.ts dev_deps.ts deps.ts && deno task lock",
+    "lock": "deno cache --lock=deno.lock --lock-write dev_deps.ts deps.ts",
+    "all": "deno task udd && deno task lint && deno task fmt"
   }
 }

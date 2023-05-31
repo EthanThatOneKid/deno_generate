@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "../../test_deps.ts";
+import { assertEquals, assertThrows } from "../dev_deps.ts";
 
 import { quotedSplit } from "./quoted_split.ts";
 
@@ -73,5 +73,5 @@ Deno.test("split escapes single quote", () => {
 });
 
 Deno.test("Split throws on unterminated single quote", () => {
-  assertThrows(() => quotedSplit(`'a`), Error, "unterminated ' string");
+  assertThrows(() => quotedSplit(`'a`), Error, "Unterminated ' string");
 });
