@@ -54,13 +54,14 @@ export function parseGenerateFlags(args: string[]) {
     stopEarly: true,
     string: ["run", "skip", "include", "exclude"],
     collect: ["run", "skip", "include", "exclude"],
-    boolean: ["dry-run", "verbose", "trace"],
+    boolean: ["help", "dry-run", "verbose", "trace"],
     alias: {
       "dry-run": ["n"],
       "verbose": ["v"],
       "trace": ["x"],
       "run": ["r"],
       "skip": ["s"],
+      "help": ["h"],
     },
     default: {
       "dry-run": false,

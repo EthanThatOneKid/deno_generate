@@ -1,6 +1,7 @@
 import { handlers, setup } from "../deps.ts";
 import { GENERATE, generate } from "../mod.ts";
 import { parseGenerateFlags, toGenerateOptions } from "./flags.ts";
+import { HELP } from "./help.ts";
 
 if (import.meta.main) {
   await main();
@@ -10,10 +11,17 @@ if (import.meta.main) {
  * main is the entrypoint of the program.
  */
 async function main() {
+  // Parse flags.
   const flags = parseGenerateFlags(Deno.args);
-  // TODO: Print help text from <https://github.com/denoland/deno/issues/19176>.
+  if (flags.help || flags._.length === 0) {
+    console.log(HELP);
+    Deno.exit(0);
+  }
+
+  // Convert flags to options.
   const options = toGenerateOptions(flags);
 
+  // Setup logging.
   await setup({
     loggers: {
       [GENERATE]: {
@@ -27,5 +35,6 @@ async function main() {
     },
   });
 
+  // Run the generators.
   await generate(options);
 }
