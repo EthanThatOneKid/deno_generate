@@ -9,8 +9,8 @@ import { quotedSplit } from "./quoted_split.ts";
 export interface ParsedComment {
   args: string[];
   original: string;
-  line: bigint;
-  character: bigint;
+  line: number;
+  character: number;
   alias?: string;
 }
 
@@ -30,15 +30,15 @@ export const DIRECTIVE_PATTERN = /^\/\/deno:generate\s+/;
  */
 export async function parseComments(reader: Reader): Promise<ParsedComment[]> {
   const comments: ParsedComment[] = [];
-  let currentLine = BigInt(0);
+  let currentLine = 0;
   for await (const line of readLines(reader)) {
-    currentLine += BigInt(1);
+    currentLine++;
     if (!DIRECTIVE_PATTERN.test(line)) {
       continue;
     }
 
     comments.push(
-      fromComment(line, currentLine.valueOf(), BigInt(0)),
+      fromComment(line, currentLine, 0),
     );
   }
 
@@ -51,8 +51,8 @@ export async function parseComments(reader: Reader): Promise<ParsedComment[]> {
  */
 function fromComment(
   comment: string,
-  line: bigint,
-  character: bigint,
+  line: number,
+  character: number,
 ): ParsedComment {
   // Remove the leading // and trailing whitespace
   const original = comment
