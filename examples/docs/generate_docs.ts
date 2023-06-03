@@ -1,6 +1,6 @@
 // Create a child process running `deno doc --json`.
 const child = new Deno.Command(Deno.execPath(), {
-  args: ["doc", "--json"],
+  args: ["doc", "with_generate_docs.ts", "--json"],
   stdin: "piped",
   stdout: "piped",
 }).spawn();
