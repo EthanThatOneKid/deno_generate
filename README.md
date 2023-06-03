@@ -61,7 +61,7 @@ Install from script source (Expand for more information)
 ```sh
 git clone https://github.com/ethanthatonekid/deno_generate.git
 cd deno_generate
-deno install -rf -A main.ts --name=deno-generate
+deno install -rf -A cli/main.ts --name=deno-generate
 ```
 
 </details>
