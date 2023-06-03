@@ -1,4 +1,4 @@
-# `deno generate` Proof-of-Concept ![thunder_deno](https://cdn.discordapp.com/emojis/811013541846319105.gif?size=24&quality=lossless)
+# `deno generate` proof-of-concept ![thunder_deno](https://cdn.discordapp.com/emojis/811013541846319105.gif?size=24&quality=lossless)
 
 [![deno doc](https://doc.deno.land/badge.svg)](https://deno.land/x/generate)
 
@@ -9,8 +9,8 @@ proposed in [Deno issue #19176](https://github.com/denoland/deno/issues/19176).
 
 ## Usage
 
-To use this tool, you need to add a `//deno:generate` comment in your program
-with the command you want to run. For example:
+To use this tool, add a `//deno:generate` comment in your program with the
+command you want to run. For example:
 
 ```ts
 //deno:generate deno run https://deno.land/std/examples/cat.ts README.md
@@ -18,27 +18,28 @@ with the command you want to run. For example:
 
 ### Running the CLI tool
 
-To generate your code using the CLI tool, you can run the tool from
-`deno.land/x` with the command:
+To generate code using the CLI tool, run the tool from `deno.land/x` with the
+command:
 
 ```sh
-deno run -Ar https://deno.land/x/generate/main.ts <entrypoint file>
+deno run -Ar https://deno.land/x/generate/cli/main.ts <entrypoint file>
 ```
 
 If you are interested in installing the script, refer to the
 [Installation](#installation) section.
 
 ```sh
+deno-generate --help
 deno-generate <entrypoint file>
 ```
 
 You can also define a task in your `deno.jsonc` file to run the CLI tool in your
-project:
+Deno project:
 
 ```jsonc
 {
   "tasks": {
-    "generate": "deno run -Ar https://deno.land/x/generate/main.ts <entrypoint file>"
+    "generate": "deno run -Ar https://deno.land/x/generate/cli/main.ts <entrypoint file>"
   }
 }
 ```
@@ -48,7 +49,7 @@ project:
 Alternatively, you can install the script as a command and run it locally:
 
 ```sh
-deno install -rf -A https://deno.land/x/generate/main.ts --name=deno-generate
+deno install -rf -A https://deno.land/x/generate/cli/main.ts --name=deno-generate
 deno-generate <entrypoint file>
 ```
 
@@ -72,12 +73,6 @@ by the `--allow-run` flag. This security measure is in place to prevent the
 execution of malicious code. You can set this flag during installation or each
 time you run the script.
 
-For example, to only allow `deno run` commands, use the following command:
-
-```sh
-deno run -Ar https://deno.land/x/generate/main.ts <entrypoint file> --allow-run=deno
-```
-
 You can find more information about the `--allow-run` flag in the
 [Deno permissions documentation](https://deno.land/manual/basics/permissions#permissions-list).
 
@@ -100,65 +95,6 @@ As for use cases, your imagination is the limit. Here are a few:
    their code.
 4. Generating code from annotations: Developers can add annotations to their
    code that define which generators to run and how to run them.
-
-### Conventions
-
-To ensure a consistent developer experience, we recommend following these
-conventions when using the CLI tool:
-
-#### Pre-commit
-
-To enhance your development workflow, we recommend implementing a pre-commit
-hook in your project's Git repository. Follow these steps to set it up:
-
-1. Create a file named "pre-commit" (without any file extension) within your
-   project's ".git/hooks" directory.
-2. Ensure that the file is executable by running the following command in your
-   terminal:
-
-```bash
-chmod +x .git/hooks/pre-commit
-```
-
-3. Open the "pre-commit" file in a text editor and add the following code:
-
-```bash
-#!/bin/bash
-
-# Run generators before committing.
-deno task generate
-
-# Check if any files have changed.
-git diff --exit-code
-```
-
-#### Linguist generated
-
-When dealing with code generation, there are situations where generated files
-should not be visible to developers during a pull request. To address this, a
-setting can be used to differentiate their changes, ensuring a cleaner and more
-focused code review. On GitHub, you can achieve this by marking specific files
-with the "linguist-generated" attribute in a ".gitattributes" file[^1]. This
-attribute allows you to hide these files by default in diffs and exclude them
-from contributing to the repository language statistics.
-
-To implement this, follow these steps:
-
-1. Create a ".gitattributes" file in your project's root directory if it doesn't
-   already exist.
-2. Open the ".gitattributes" file in a text editor and include the relevant file
-   patterns along with the "linguist-generated" attribute. For example:
-
-```bash
-# Marking generated files
-*.generated.extension linguist-generated
-```
-
-3. Save the file and commit it to your repository.
-
-Now, when viewing pull requests or generating diffs on GitHub, the marked files
-will be hidden by default, providing a more streamlined code review process and
-excluding them from language statistics calculations.
 
 ## Examples
 
@@ -307,6 +243,65 @@ child.stdout.pipeTo(
   Deno.openSync("doc.json", { write: true, create: true }).writable,
 );
 ```
+
+### Conventions
+
+To ensure a consistent developer experience, we recommend following these
+conventions when using the CLI tool:
+
+#### Pre-commit
+
+To enhance your development workflow, we recommend implementing a pre-commit
+hook in your project's Git repository. Follow these steps to set it up:
+
+1. Create a file named "pre-commit" (without any file extension) within your
+   project's ".git/hooks" directory.
+2. Ensure that the file is executable by running the following command in your
+   terminal:
+
+```bash
+chmod +x .git/hooks/pre-commit
+```
+
+3. Open the "pre-commit" file in a text editor and add the following code:
+
+```bash
+#!/bin/bash
+
+# Run generators before committing.
+deno task generate
+
+# Check if any files have changed.
+git diff --exit-code
+```
+
+#### Linguist generated
+
+When dealing with code generation, there are situations where generated files
+should not be visible to developers during a pull request. To address this, a
+setting can be used to differentiate their changes, ensuring a cleaner and more
+focused code review. On GitHub, you can achieve this by marking specific files
+with the "linguist-generated" attribute in a ".gitattributes" file[^1]. This
+attribute allows you to hide these files by default in diffs and exclude them
+from contributing to the repository language statistics.
+
+To implement this, follow these steps:
+
+1. Create a ".gitattributes" file in your project's root directory if it doesn't
+   already exist.
+2. Open the ".gitattributes" file in a text editor and include the relevant file
+   patterns along with the "linguist-generated" attribute. For example:
+
+```bash
+# Marking generated files
+*.generated.extension linguist-generated
+```
+
+3. Save the file and commit it to your repository.
+
+Now, when viewing pull requests or generating diffs on GitHub, the marked files
+will be hidden by default, providing a more streamlined code review process and
+excluding them from language statistics calculations.
 
 ## Development
 
