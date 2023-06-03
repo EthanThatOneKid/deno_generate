@@ -29,13 +29,13 @@ export function toGenerateOptions(flags: GenerateFlags): GenerateOptions {
       .map((specifierOrGlob) =>
         isGlob(specifierOrGlob)
           ? globToRegExp(specifierOrGlob)
-          : escapeRegExp(specifierOrGlob)
+          : new RegExp(specifierOrGlob)
       ),
     exclude: flags["exclude"]
       .map((specifierOrGlob) =>
         isGlob(specifierOrGlob)
           ? globToRegExp(specifierOrGlob)
-          : escapeRegExp(specifierOrGlob)
+          : new RegExp(specifierOrGlob)
       ),
   };
 }
@@ -69,18 +69,4 @@ export function parseGenerateFlags(args: string[]) {
       "trace": false,
     },
   });
-}
-
-/**
- * escapeRegExp escapes a string for use in a regular expression.
- *
- * @see
- * https://github.com/sindresorhus/escape-string-regexp#readme
- */
-export function escapeRegExp(pattern: string): RegExp {
-  return new RegExp(
-    pattern
-      .replace(/[|\\{}()[\]^$+*?.]/g, "\\$&")
-      .replace(/-/g, "\\x2d"),
-  );
 }
