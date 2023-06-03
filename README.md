@@ -264,7 +264,7 @@ encompasses both configuration and the main function call, providing benefits
 such as IDE-based type-checking.
 [See more](https://github.com/NfNitLoop/deno-embedder).
 
-#### [`examples/embedder/with_embedder.ts`](examples/embedder/with_embedder.ts)
+#### `with_embedder.ts`
 
 ```ts
 //deno:generate deno run -A embedder.ts
@@ -285,14 +285,14 @@ const staticFiles = await Bundlee.load("bundle.json");
 
 ### Generate `deno doc` JSON
 
-#### [`examples/docs/with_generate_docs.ts`](examples/docs/with_generate_docs.ts)
+#### `with_generate_docs.ts`
 
 ```ts
 //deno:generate deno run -A generate_docs.ts
 import doc from "./doc.json" assert { type: "json" };
 ```
 
-#### [`examples/docs/generate_docs.ts`](examples/docs/generate_docs.ts)
+#### `generate_docs.ts`
 
 ```ts
 // Create a child process running `deno doc --json`.
@@ -313,7 +313,7 @@ child.stdout.pipeTo(
 To run the tool from source, use the following command:
 
 ```sh
-deno run -A cli/main.ts --verbose ./examples/with_generate_docs.ts
+deno run -A cli/main.ts --verbose ./examples/embedder/with_embedder.ts
 ```
 
 ### Testing
@@ -396,4 +396,4 @@ maintainability by ensuring consistency throughout the project.
 
 Programmed with 🦕 by [**@EthanThatOneKid**](https://etok.codes/)
 
-[^1]: https://docs.github.com/en/repositories/working-with-files/managing-files/customizing-how-changed-files-appear-on-github
+[^1]: <https://docs.github.com/en/repositories/working-with-files/managing-files/customizing-how-changed-files-appear-on-github>
