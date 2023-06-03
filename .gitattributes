@@ -1,1 +1,2 @@
-examples/doc.json linguist-generated
+examples/embedder_static/* linguist-generated
+examples/typescript/generated.ts linguist-generated
