@@ -1,4 +1,5 @@
 import { createGraph, dirname, getLogger } from "./deps.ts";
+import type { ParsedComment } from "./parse/mod.ts";
 import { parseComments } from "./parse/mod.ts";
 
 /**
@@ -22,12 +23,18 @@ export async function generate(options: GenerateOptions): Promise<void> {
       continue;
     }
 
-    // Run the generators.
+    // Read the module's directives.
     const specifier = new URL(module.specifier);
     logger().info(`Generating ${specifier}`);
-    const comments = await parseComments(
-      Deno.openSync(specifier, { "read": true }),
-    );
+    let comments: ParsedComment[] = [];
+    try {
+      comments = await parseComments(
+        Deno.openSync(specifier, { "read": true }),
+      );
+    } catch (error) {
+      logger().error(`Error parsing ${specifier}: ${error}`);
+      continue;
+    }
     const aliases = new Map<string, string[]>();
     for (const comment of comments) {
       // Skip the comment if it matches any of the skip patterns.
