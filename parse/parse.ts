@@ -1,4 +1,3 @@
-import type { Reader } from "../deps.ts";
 import { readLines } from "../deps.ts";
 import { quotedSplit } from "./quoted_split.ts";
 
@@ -28,7 +27,9 @@ export const DIRECTIVE_PATTERN = /^\/\/deno:generate\s+/;
  *
  * Implements dynamic programming to get the line and character of the comment.
  */
-export async function parseComments(reader: Reader): Promise<ParsedComment[]> {
+export async function parseComments(
+  reader: Deno.Reader,
+): Promise<ParsedComment[]> {
   const comments: ParsedComment[] = [];
   let currentLine = 0;
   for await (const line of readLines(reader)) {
