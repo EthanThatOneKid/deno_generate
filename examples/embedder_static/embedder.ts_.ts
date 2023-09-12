@@ -1,9 +1,9 @@
-import { F } from "https://deno.land/x/embedder@v1.0.1/embed.ts";
+import { F } from "https://deno.land/x/embedder@v1.1.1/embed.ts";
 export default F({
-  size: 333,
+  size: 307,
   encoded: `
-aW1wb3J0ICogYXMgZW1iZWRkZXIgZnJvbSAiaHR0cHM6Ly9kZW5vLmxhbmQveC9lbWJlZGRlckB2MS4wLjEvbW9kLnRzIjsKCmNvbnN0IGVtYmVkZGVyT3B0
-aW9uczogZW1iZWRkZXIuRGV2T3B0aW9ucyA9IHsKICBpbXBvcnRNZXRhOiBpbXBvcnQubWV0YSwKICBtYXBwaW5nczogWwogICAgeyBzb3VyY2VEaXI6ICIu
-LyIsIGRlc3REaXI6ICIuLi9lbWJlZGRlcl9zdGF0aWMiIH0sCiAgXSwKfTsKCmlmIChpbXBvcnQubWV0YS5tYWluKSB7CiAgYXdhaXQgZW1iZWRkZXIubWFp
-bih7CiAgICBvcHRpb25zOiBlbWJlZGRlck9wdGlvbnMsCiAgICBhcmdzOiBbImJ1aWxkIl0sCiAgfSk7Cn0K`,
+aW1wb3J0IHsgZW1iZWRkZXIgfSBmcm9tICIuLi8uLi9kZXZfZGVwcy50cyI7Cgpjb25zdCBlbWJlZGRlck9wdGlvbnM6IGVtYmVkZGVyLkRldk9wdGlvbnMg
+PSB7CiAgaW1wb3J0TWV0YTogaW1wb3J0Lm1ldGEsCiAgbWFwcGluZ3M6IFsKICAgIHsgc291cmNlRGlyOiAiLi8iLCBkZXN0RGlyOiAiLi4vZW1iZWRkZXJf
+c3RhdGljIiB9LAogIF0sCn07CgppZiAoaW1wb3J0Lm1ldGEubWFpbikgewogIGF3YWl0IGVtYmVkZGVyLm1haW4oewogICAgb3B0aW9uczogZW1iZWRkZXJP
+cHRpb25zLAogICAgYXJnczogWyJidWlsZCJdLAogIH0pOwp9Cg==`,
 });

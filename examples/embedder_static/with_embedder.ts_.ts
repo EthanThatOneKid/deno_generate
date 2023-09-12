@@ -1,4 +1,4 @@
-import { F } from "https://deno.land/x/embedder@v1.0.1/embed.ts";
+import { F } from "https://deno.land/x/embedder@v1.1.1/embed.ts";
 export default F({
   size: 227,
   encoded: `
