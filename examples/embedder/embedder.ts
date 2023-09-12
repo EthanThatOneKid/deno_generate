@@ -1,4 +1,4 @@
-import * as embedder from "https://deno.land/x/embedder@v1.0.1/mod.ts";
+import { embedder } from "../../dev_deps.ts";
 
 const embedderOptions: embedder.DevOptions = {
   importMeta: import.meta,
