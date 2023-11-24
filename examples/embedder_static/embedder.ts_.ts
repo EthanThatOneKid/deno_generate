@@ -1,9 +1,0 @@
-import { F } from "https://deno.land/x/embedder@v1.1.1/embed.ts";
-export default F({
-  size: 307,
-  encoded: `
-aW1wb3J0IHsgZW1iZWRkZXIgfSBmcm9tICIuLi8uLi9kZXZfZGVwcy50cyI7Cgpjb25zdCBlbWJlZGRlck9wdGlvbnM6IGVtYmVkZGVyLkRldk9wdGlvbnMg
-PSB7CiAgaW1wb3J0TWV0YTogaW1wb3J0Lm1ldGEsCiAgbWFwcGluZ3M6IFsKICAgIHsgc291cmNlRGlyOiAiLi8iLCBkZXN0RGlyOiAiLi4vZW1iZWRkZXJf
-c3RhdGljIiB9LAogIF0sCn07CgppZiAoaW1wb3J0Lm1ldGEubWFpbikgewogIGF3YWl0IGVtYmVkZGVyLm1haW4oewogICAgb3B0aW9uczogZW1iZWRkZXJP
-cHRpb25zLAogICAgYXJnczogWyJidWlsZCJdLAogIH0pOwp9Cg==`,
-});
