@@ -47,6 +47,8 @@ deno run -A main.ts
 · denoland/deno] discussion if you're interested in seeing a command like
 `deno generate` included in the Deno CLI.
 
+<sup>This is a _proof-of-concept_. use `deno task` in any serious projects instead. 😉</sup>
+
 ## Install
 
 ![Deno](https://img.shields.io/static/v1?style=for-the-badge&message=Deno&color=000000&logo=Deno&logoColor=FFFFFF&label=)
