@@ -13,7 +13,7 @@ const ast = parseCSS(`a:hover { background: red; }`)
 console.log(ast);
 ```
 
-<td>
+<tr><td>
 
 ```pegjs
 // css.pegjs
@@ -26,7 +26,7 @@ stylesheet
 // ...
 ```
 
-<tr><td colspan=2>
+<tr><td>
 
 ```sh
 deno_generate
