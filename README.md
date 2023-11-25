@@ -184,6 +184,35 @@ deno run -A api.ts
 you want to recursively scan for `deno:generate` comments, specify a glob
 pattern like `deno_generate "./**"`
 
+#### Why do I want to put `//deno:generate <command>` in source code instead of just in `deno task`?
+
+Using `//deno:generate <command>` in a TypeScript file instead of solely relying
+on `deno task` offers several advantages. Firstly, incorporating
+`//deno:generate` directly into the source code allows for better integration
+between the generators and the codebase. This approach enables developers to
+easily understand and manage the generators as an integral part of the project.
+
+Additionally, by utilizing `//deno:generate`, we can conveniently run multiple
+generators that are closely tied to the specific TypeScript files. While it's
+technically feasible to write a `deno task` that mimics the functionality of a
+series of `//deno:generate` commands, this approach may not scale efficiently
+when the project relies on numerous generators. By placing the `//deno:generate`
+directives within the relevant TypeScript files, we achieve a more scalable and
+flexible solution for managing generator-related tasks.
+
+#### If I have two files that depend on some generated code, which file do does `//deno:generate` belong in?
+
+In situations where multiple files depend on the same generated code, it's
+highly recommended to create a shared module. This shared module serves as a
+central location from which both files can import the generated code. By doing
+so, we promote better code organization and encourage code reuse.
+
+The shared module approach also simplifies future modifications and updates. If
+the generated code needs to be modified or enhanced, we can make the changes in
+a single place—the shared module—and have the updates reflect in both files that
+depend on it. This not only reduces code duplication but also improves
+maintainability by ensuring consistency throughout the project.
+
 <!-- prettier-ignore-start -->
 [Feature request: Add `deno generate` subcommand · Issue #19176 · denoland/deno]: https://github.com/denoland/deno/issues/19176
 [`go generate`]: https://go.googlesource.com/proposal/+/refs/heads/master/design/go-generate.md
