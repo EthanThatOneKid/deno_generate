@@ -5,26 +5,35 @@
 <table align=center><td>
 
 ```ts
-// generate_data.ts
-const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
-const json = response.json();
-await Deno.writeTextFile("data.js", `export default ${JSON.stringify(json)}`);
+// main.ts
+//deno:generate deno run -A npm:peggyjs@3 css.pegjs
+import { parse as parseCSS } from "./css.js";
+
+const ast = parseCSS(`a:hover { background: red; }`)
+console.log(ast);
 ```
 
-<tr><td>
+<td>
 
-```ts
-// app.ts
-//deno:generate deno run -A ./generate_data.ts
-import data from "./data.js";
-console.log(data);
-// => { userId: 1, id: 1, title: 'delectus aut autem', completed: false }
+```pegjs
+// css.pegjs
+start
+  = stylesheet:stylesheet comment* { return stylesheet; }
+stylesheet
+  = charset:(CHARSET_SYM STRING ";")? (S / CDO / CDC)*
+    imports:(import (CDO S* / CDC S*)*)*
+    rules:((ruleset / media / page) (CDO S* / CDC S*)*)*
+// ...
 ```
 
-<tr><td>
+<tr><td colspan=2>
 
 ```sh
 deno_generate
+ls
+#=> main.ts css.pegjs css.js
+deno run -A main.ts
+#=> [Large AST]
 ```
 
 </table>
@@ -68,56 +77,113 @@ Or add a task to your `deno.json`:
 
 ![Deno](https://img.shields.io/static/v1?style=for-the-badge&message=Deno&color=000000&logo=Deno&logoColor=FFFFFF&label=)
 
+You can use `deno:generate` to run Deno scripts that generate data for your app
+to consume. Here's an example that fetches data at generation time:
+
+<table align=center><td>
+
 ```ts
-// main.ts
-//deno:generate deno eval "await Deno.writeTextFile('data.json', '1000'))"
-const data = JSON.parse(await Deno.readTextFile("data.json"));
+// app.ts
+//deno:generate deno run -A ./generate_data.ts
+import data from "./data.js";
 console.log(data);
-//=> 1000
 ```
+
+<td>
 
 ```sh
 deno_generate
-deno run -A main.ts
-#=> 1000
+ls
+#=> app.ts generate_data.ts data.js
+deno run -A app.ts
+#=> { message: "Hello world!" }
 ```
 
-You can use `deno:generate` to run Deno scripts that generate data for your app
-to consume.
+<tr><td colspan=2>
 
 ```ts
 // generate_data.ts
-const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
-const json = await response.json();
-await Deno.writeTextFile("data.json", JSON.stringify(json));
+const response = await fetch("https://example.org/data.json");
+const json = response.json();
+const js = `export default ${JSON.stringify(json)}`;
+await Deno.writeTextFile("data.js", js);
 ```
 
-```ts
-// main.ts
-//deno:generate deno run -A ./generate_data.ts
-const data = JSON.parse(await Deno.readTextFile("data.json"));
-console.log(data);
-//=> { userId: 1, id: 1, title: 'delectus aut autem', completed: false }
-```
+</table>
 
 💡 Pro tip: Use the `--allow-run=mycommand` flag with `deno run` to limit which
 commands `deno_generate` can spawn.
-
-```sh
-deno_generate
-deno run -A main.ts
-#=> { userId: 1, id: 1, title: 'delectus aut autem', completed: false }
-```
 
 ⚠️ It's recommended to commit any generated files to source control so that any
 user of your package can import it directly from GitHub without needing to run
 `deno_generate` themselves with a build step on their own machine.
 
+Here's another example of a `//deno:generate` command to generate TypeScript types from a JSON schema:
+
+<table align=center><td colspan=2>
+
+```ts
+// api.ts
+//deno:generate deno run -A npm:json-schema-to-typescript@13 req.schema.json req.d.ts
+import type RequestType from "./req.d.ts"
+//deno:generate deno run -A npm:json-schema-to-typescript@13 res.schema.json res.d.ts
+import type ResponseType from "./res.d.ts"
+Deno.serve((request) => {
+  const req = await request.json() as RequestType
+  const res: ResponseType = {
+    from: "server@example.com",
+    to: "user@example.org",
+    messageHTML: marked(req.messageMD),
+  };
+  return Response.json(res);
+});
+```
+
+<tr><td>
+
+```jsonc
+// req.schema.json
+{
+  "type": "object",
+  "properties": {
+    "messageMD": { "type": "string" }
+  },
+  "required": ["messageMD"]
+}
+```
+
+<td>
+
+```jsonc
+// res.schema.json
+{
+  "type": "object",
+  "properties": {
+    "from": { "type": "string" },
+    "to": { "type": "string" },
+    "messageHTML": { "type": "string" }
+  },
+  "required": ["from", "to", "messageHTML"]
+}
+
+```
+
+<tr><td colspan=2>
+
+```sh
+deno_generate
+ls
+#=> api.ts req.schema.json res.schema.json req.d.ts res.d.ts
+deno run -A api.ts
+```
+
+</table>
+
 ℹ `deno_generate` only scans one level deep for `deno:generate` comments. If
 you want to recursively scan for `deno:generate` comments, specify a glob
 pattern like `deno_generate "./**"`
 
-[Feature request: Add `deno generate` subcommand · Issue #19176 · denoland/deno]:
-  https://github.com/denoland/deno/issues/19176
-[`go generate`]:
-  https://go.googlesource.com/proposal/+/refs/heads/master/design/go-generate.md
+<!-- prettier-ignore-start -->
+[Feature request: Add `deno generate` subcommand · Issue #19176 · denoland/deno]: https://github.com/denoland/deno/issues/19176
+[`go generate`]: https://go.googlesource.com/proposal/+/refs/heads/master/design/go-generate.md
+<!-- prettier-ignore-end -->
