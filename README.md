@@ -6,7 +6,7 @@
 
 ```ts
 // main.ts
-//deno:generate deno run -A npm:peggyjs@3 css.pegjs
+//deno:generate deno run -A npm:peggy@3 css.pegjs
 import { parse as parseCSS } from "./css.js";
 
 const ast = parseCSS(`a:hover { background: red; }`)
