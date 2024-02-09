@@ -41,7 +41,8 @@ const options = {
   xtrace: { type: "boolean", short: "x" },
   "show-output": { type: "boolean", short: "O" },
 }; // satisfies ParseArgsConfig['options']
-const { values, positionals } = parseArgs({ options, allowPositionals: true });
+// https://github.com/denoland/deno/issues/22363
+const { values, positionals } = parseArgs({ options, allowPositionals: true, args: process.argv.slice(2) });
 
 if (values.help) {
   console.log(help);
