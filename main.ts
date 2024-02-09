@@ -1,8 +1,5 @@
 import process from "node:process";
-// https://github.com/denoland/deno/issues/20452
-// import { parseArgs, type ParseArgsConfig } from "node:util"
-// @ts-ignore: no types
-import { parseArgs } from "npm:@pkgjs/parseargs@~0.11.0";
+import { parseArgs } from "node:util";
 import { basename, delimiter, dirname, join, resolve } from "node:path";
 import { readFile } from "node:fs/promises";
 import { $ } from "npm:execa@^8.0.1";
